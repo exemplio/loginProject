@@ -1,0 +1,117 @@
+<main class="container overflow-auto mt-5" style="min-height: 100vh;">
+	<div class="rounded">
+		<div class="row" style="margin-top:10px;justify-content: center;">
+			<div class="col-xl-5 col-sm-7 col-md-7 col-11 account-wall">
+				<div style="text-align:center;margin-bottom:15px;">
+					<img class="ec-menu-brand__img" src="assets/images/logo_app.png" width="150rem;"
+						alt="Logo">
+				</div>
+				<div style="text-align:center;">
+					<h2 class="font-light texto-movistar">Login Project</h2>
+					<form class="form-signin" style="padding:20px;">
+						<div class="col-12" style="display: flex; align-items: center;">
+							<div class="form-check fs-4 form-switch">
+								<input class="form-check-input" type="checkbox" (click)="checkLogin()"
+									id="flexSwitchCheckDefault">
+							</div>
+							<p style="margin-top: 19px;" *ngIf="typeLogin == true">Iniciar con correo</p>
+							<p style="margin-top: 19px;" *ngIf="typeLogin == false">Iniciar con RIF/Cédula</p>
+						</div>
+						<div class="form-floating" *ngIf="typeLogin == false">
+							<input type="text" style="margin-bottom:15px;text-transform:lowercase;"
+								class="form-control input-movistar" placeholder="Usuario" required autofocus
+								[(ngModel)]="email" name="email" id="email" (keypress)="validarEmail($event,email)"
+								maxlength="80" autocomplete="off">
+							<label for="email" class="font-regular {{etiqueta}}">Correo electrónico</label>
+						</div>
+						<div class="col-12 d-flex" *ngIf="typeLogin == true">
+							<div>
+								<select class="form-select font-regular" id="type_doc" name="type_doc"
+									aria-label="Seleccione el tipo" [(ngModel)]="type_doc"
+									style="width:62px;height: 58px;border-bottom-right-radius: 0 !important; border-top-right-radius: 0 !important;">
+									<option *ngFor="let item of listDocs let i = index;" [value]="item">{{item}}
+									</option>
+								</select>
+							</div>
+							<div class="form-floating" style="width: 90%;">
+								<input type="text" inputmode="numeric"
+									style="margin-bottom:15px;text-transform:lowercase; border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important;"
+									class="form-control input-movistar" placeholder="Usuario"
+									(keypress)="keypressNumeros($event)" required autofocus [(ngModel)]="doc" name="doc"
+									id="doc" maxlength="10" autocomplete="off">
+								<label for="doc" class="font-regular {{etiqueta}}">RIF/CI</label>
+							</div>
+						</div>
+						<div class="form-floating mb-3" style="margin-bottom:15px; display: flex; align-items: center;">
+							<input type="password"
+								style="width: 95%; border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important;"
+								class="form-control input-movistar" placeholder="Contraseña" aria-label="Contraseña"
+								required [(ngModel)]="password" name="password" id="password" autocomplete="off"
+								maxlength="20" (keyup)="keyupsearch($event)">
+							<div style="    display: flex;align-items: center;padding: .375rem .75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #212529;text-align: center;white-space: nowrap;background-color: #e9ecef;border: 1px solid #ced4da; border-top-left-radius: 0 ; border-top-right-radius:.375rem; border-bottom-right-radius: .375rem ;height: 58px;"
+								(mouseover)="changeTypeInputShow('password')"
+								(mouseout)="changeTypeInputHide('password')">
+								<span class="font-regular" style="cursor:pointer;"
+									(mouseover)="changeTypeInputShow('password')"
+									(mouseout)="changeTypeInputHide('password')"><img
+										src="assets/images/visibility_black.svg" height="20px" /></span>
+							</div>
+							<label for="password" class="font-regular {{etiqueta}}">Contraseña</label>
+						</div>
+						<button class="btn btn-lg btn-block btn_color_primary" style="width:100%" type="submit"
+							(click)="authPasswordGrant()">Ingresar</button>
+						<button class="btn btn-lg btn-block btn_color_secondary mt-4" style="width:100%" type="submit"
+							routerLink="/register">Nuevo usuario</button>
+					</form>
+					<p style="font-size:16px;text-align:center;">
+						<a class="text_dark font-bold" style="cursor:pointer; text-decoration: none;" (click)="irTop()"
+							routerLink="/request">¿No recuerdas tu contraseña? <span
+								class="bb_primary text_primary">Recuperar</span></a>
+					</p>
+					<p style="font-size:16px;text-align:center;">
+						<a class="text_dark font-bold" style="cursor:pointer; text-decoration: none;" (click)="irTop()"
+							routerLink="/resend-activation">¿No te llegó el correo de activación? <span
+								class="bb_primary text_primary">Reenviar</span></a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade bd-example-modal-sm" id="forzarCierre" tabindex="-1" role="dialog" aria-labelledby="Mensaje"
+		aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h6 class="text_dark" id="myModalLabel" style="margin-bottom:0px;margin-top:0px;" lang="es">
+						<b>Tienes más de un dispositivo conectado</b></h6>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+						style="float:left;">
+					</button>
+				</div>
+				<div class="modal-body" style="word-wrap: break-word;">
+					<p style="margin-bottom:1px;text-align: center; font-size: 13px;" class="Kalinga" lang="es">
+						Pide un token para autorizar cierre de sesiones activas
+					</p>
+					<div style="text-align:center;">
+						<button type="button" class="btn btn_color_secondary"
+							(click)="actionToken()">{{textoToken}}</button>
+					</div>
+					<h6 class="Kalinga" style="margin-top:2px;margin-right:2px" *ngIf="mensajeToken!=null">
+						{{mensajeToken}}</h6>
+					<div class="form-floating" style="margin-bottom:0px;margin-top:15px;">
+						<input type="text" id="token" name="token" class="form-control Kalinga"
+							style="margin-bottom:0px;" [(ngModel)]="tokenForzado" maxlength="6">
+						<label for="token" class="Kalinga">Token</label>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn  btn-secondary" data-bs-dismiss="modal" style="font-size:16px;"
+						lang="es">Cancelar</button>
+					<button type="button" class="btn btn_color_primary" style="font-size:16px;"
+						(click)="forzarCierres()" lang="es">Forzar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+<footer></footer>
